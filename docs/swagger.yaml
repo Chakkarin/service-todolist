@@ -1,0 +1,264 @@
+definitions:
+  todo.CreateTodo:
+    properties:
+      description:
+        type: string
+      due_date:
+        type: string
+      id:
+        type: string
+      priority:
+        enum:
+        - LOW
+        - MEDIUM
+        - HIGH
+        type: string
+      title:
+        type: string
+    type: object
+  todo.SearchTodoRes:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/todo.CreateTodo'
+        type: array
+      limit:
+        maximum: 100
+        minimum: 2
+        type: integer
+      start:
+        minimum: 0
+        type: integer
+      total:
+        type: integer
+    required:
+    - limit
+    type: object
+  todo.Todo:
+    properties:
+      completed:
+        type: boolean
+      description:
+        type: string
+      due_date:
+        type: string
+      id:
+        type: string
+      priority:
+        enum:
+        - LOW
+        - MEDIUM
+        - HIGH
+        type: string
+      title:
+        type: string
+    type: object
+  todo.UpdateTodo:
+    properties:
+      description:
+        type: string
+      due_date:
+        type: string
+      priority:
+        enum:
+        - LOW
+        - MEDIUM
+        - HIGH
+        type: string
+      title:
+        type: string
+    type: object
+info:
+  contact: {}
+  title: Todo API
+paths:
+  /v1/health:
+    get:
+      description: Health checking for the service
+      operationId: HealthCheckHandler
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Health Check
+  /v1/todo:
+    get:
+      consumes:
+      - application/json
+      description: Search Todo by title, due date, priority and completed
+      operationId: SearchTodoHandler
+      parameters:
+      - in: query
+        name: completed
+        type: boolean
+      - in: query
+        name: description
+        type: string
+      - in: query
+        name: due_date
+        type: string
+      - in: query
+        name: id
+        type: string
+      - in: query
+        maximum: 100
+        minimum: 2
+        name: limit
+        required: true
+        type: integer
+      - enum:
+        - LOW
+        - MEDIUM
+        - HIGH
+        in: query
+        name: priority
+        type: string
+      - in: query
+        minimum: 0
+        name: start
+        type: integer
+      - in: query
+        name: title
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/todo.SearchTodoRes'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Search Todo
+      tags:
+      - Todo
+    post:
+      consumes:
+      - application/json
+      description: Create a new Todo
+      operationId: CreateTodoHandler
+      parameters:
+      - description: Todo
+        in: body
+        name: todo
+        required: true
+        schema:
+          $ref: '#/definitions/todo.CreateTodo'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Create Todo
+      tags:
+      - Todo
+  /v1/todo/{id}:
+    delete:
+      description: Delete a Todo by id
+      operationId: DeleteTodoHandler
+      parameters:
+      - description: Todo id
+        in: query
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Delete Todo
+      tags:
+      - Todo
+    get:
+      consumes:
+      - application/json
+      description: Get Todo by id
+      operationId: GetTodoByIdHandler
+      parameters:
+      - description: Todo id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/todo.Todo'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Get Todo By Id
+      tags:
+      - Todo
+    put:
+      consumes:
+      - application/json
+      description: Update a Todo by id
+      operationId: UpdateTodoHandler
+      parameters:
+      - description: Todo id
+        in: query
+        name: id
+        required: true
+        type: string
+      - description: Todo
+        in: body
+        name: todo
+        required: true
+        schema:
+          $ref: '#/definitions/todo.UpdateTodo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Update Todo
+      tags:
+      - Todo
+  /v1/todo/{id}/complete:
+    patch:
+      consumes:
+      - application/json
+      description: Complete a Todo by id
+      operationId: CompleteTodoHandler
+      parameters:
+      - description: Todo id
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/todo.Todo'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Complete Todo
+      tags:
+      - Todo
+swagger: "2.0"
