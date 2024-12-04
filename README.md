@@ -46,3 +46,20 @@ docker compose -f docker-compose.db.yml up -d
 ```bash
 go run database/migration/migration.go
 ```
+
+## **Run **
+
+```bash
+go run mian.go
+```
+
+or
+
+```bash
+make run
+```
+
+## **API Doc **
+
+http://localhost:4000/docs/index.html#/
+[Swagger](http://localhost:4000/docs/index.html#/)
