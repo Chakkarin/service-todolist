@@ -61,5 +61,4 @@ make run
 
 ## **API Doc **
 
-http://localhost:4000/docs/index.html#/
-[Swagger](http://localhost:4000/docs/index.html#/)
+- [Swagger](http://localhost:4000/docs/index.html#/) http://localhost:4000/docs/index.html#/
